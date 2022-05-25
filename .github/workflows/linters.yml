@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   linters-checks:
-    name: clang-format
+    name: clang-format check
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -17,3 +17,20 @@ jobs:
         run: |
           find src/ include/ tests/ -type f -name '(.*cpp|.*h)' \
           | xargs -n1 clang-format -Werror --dry-run
+      - name: Failure to test
+        run: exit 1
+
+  send-telegram-message-on-failure:
+    runs-on: ubuntu-22.04
+    needs: linters-checks
+    name: Send error message to telegram
+    if: always() && (needs.linters-checks.result == 'failure')
+    steps:
+      - uses: kuznetsss/telegram_text_message_action@dev
+        with:
+          message: |
+            *Github workflow in [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})*
+            CI [action](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) failed.
+          format: MarkdownV2
+          chat_id: ${{ secrets.CHAT_ID }}
+          bot_token: ${{ secrets.BOT_TOKEN }}
