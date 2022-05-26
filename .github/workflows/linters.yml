@@ -29,8 +29,8 @@ jobs:
       - uses: kuznetsss/telegram_text_message_action@dev
         with:
           message: |
-            <b>Github workflow in <a href="${{ github.server_url }}/${{ github.repository }}">${{ github.repository }} </a></b>
-            CI <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">action </a> failed.
+            <b>Github workflow in <a href=\"${{ github.server_url }}/${{ github.repository }}\">${{ github.repository }} </a></b>
+            CI <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">action </a> failed.
           format: html
           chat_id: ${{ secrets.CHAT_ID }}
           bot_token: ${{ secrets.BOT_TOKEN }}
