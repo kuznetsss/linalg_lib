@@ -15,7 +15,7 @@ jobs:
           clang-format --version
       - name: clang-format check
         run: |
-          find src/ include/ tests/ -type f -name '(.*cpp|.*h)' \
+          find include/ tests/ -type f -name '(.*cpp|.*h)' \
           | xargs -n1 clang-format -Werror --dry-run
 
   send-telegram-message-on-failure:
