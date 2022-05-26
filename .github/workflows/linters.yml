@@ -17,8 +17,6 @@ jobs:
         run: |
           find src/ include/ tests/ -type f -name '(.*cpp|.*h)' \
           | xargs -n1 clang-format -Werror --dry-run
-      - name: Failure to test
-        run: exit 1
 
   send-telegram-message-on-failure:
     runs-on: ubuntu-22.04
