@@ -15,26 +15,30 @@ jobs:
       - name: clang-format check
         run: clang-format -Werror --dry-run `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
 
-  clang-tidy_check:
-    name: clang-tidy check
+  build_and_clang-tidy_check:
+    name: Build and run clang-tidy check
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: Install clang-tidy
+      - name: Install clang and clang-tidy
         run: |
-          sudo apt install -y clang-tidy
+          sudo apt install -y clang clang-tidy
           clang-tidy --version
+      - name: build
+        run: |
+          cmake -B build .
+          cmake --build build -j2 
       - name: clang-tidy check
         run: clang-tidy `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
 
   send-telegram-message-on-failure:
     runs-on: ubuntu-22.04
-    needs: [clang-format_check, clang-tidy_check]
+    needs: [clang-format_check, build_and_clang-tidy_check]
     name: Send error message to telegram
     if: |
       always() && (
         needs.clang-format_check.result == 'failure'
-        || needs.clang-tidy_check.result == 'failure'
+        || needs.build_and_clang-tidy_check.result == 'failure'
       )
     steps:
       - uses: kuznetsss/telegram_text_message_action@dev
