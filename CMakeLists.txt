@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS_MSAN "-O3  ")
 set(CMAKE_CXX_FLAGS_ASAN "-O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 
 # TODO add compile warnings
-add_compile_options("-Werror -Wall -Wextra")
+add_compile_options(-Werror -Wall -Wextra)
 
 add_library(linalg INTERFACE)
 target_include_directories(linalg INTERFACE include)

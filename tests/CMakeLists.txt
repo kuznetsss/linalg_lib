@@ -1,1 +1,1 @@
-add_executable(test_from_example test_from_example.cpp)
+add_subdirectory(test_from_example)
