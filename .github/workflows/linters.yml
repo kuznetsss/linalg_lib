@@ -14,9 +14,7 @@ jobs:
           sudo apt install -y clang-format
           clang-format --version
       - name: clang-format check
-        run: |
-          find include/ tests/ -type f -name '(.*cpp|.*h)' \
-          | xargs -n1 clang-format -Werror --dry-run
+        run: clang-format -Werror --dry-run `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
 
   send-telegram-message-on-failure:
     runs-on: ubuntu-22.04
