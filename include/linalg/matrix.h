@@ -18,10 +18,9 @@ class Inversed;
 
 template <size_t num_rows, size_t num_columns, typename T>
 class Matrix {
-private:
-    using DataStorage = impl::Data<num_rows, num_columns, T>;
-
 public:
+    using DataStorage = impl::Data<num_rows, num_columns, T>;
+    using Column = typename DataStorage::Column;
     using value_type = T;
     static const size_t elementsNumber = DataStorage::elementsNumber;
 
@@ -48,6 +47,10 @@ public:
     requires (num_rows == other_num_rows)
     Matrix<num_rows, other_num_columns, T>
     operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const;
+
+    const Column& operator[](size_t rowInd) const;
+    Column& operator[](size_t rowInd);
+
 
 private:
     explicit Matrix(DataStorage data);

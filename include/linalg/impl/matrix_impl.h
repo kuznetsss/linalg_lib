@@ -98,12 +98,27 @@ public:
 
     operator Matrix<num_rows, num_columns, T>()
     {
-        if (inversed_.has_value()) {
-            return Matrix(*inversed_);
-        }
+       return gaussElimination(Matrix<num_rows, num_columns, T>::ones());
+    }
 
+    template <size_t other_num_rows, size_t other_num_columns>
+    requires (num_columns == other_num_rows)
+    Matrix<num_rows, other_num_columns, T>
+    operator*(Matrix<other_num_rows, other_num_columns, T> other)
+    {
+        return gaussElimination(other);
+    }
+
+private:
+    // TODO: maybe add cache for inverted matrix here
+    Data<num_rows, num_columns, T> data_;
+
+    template <size_t other_num_rows, size_t other_num_columns>
+    requires (num_rows == other_num_rows)
+    Matrix<num_rows, other_num_columns, T>
+    gaussElimination(Matrix<other_num_rows, other_num_columns, T> augementPart)
+    {
         // TODO: check determinant is not zero
-        auto result = Matrix<num_rows, num_columns, T>::ones();
 
         // Forward elimination
         for (size_t i = 0; i < num_rows; ++i) {
@@ -118,7 +133,9 @@ public:
                 const T pivot = data_[i][i];
                 for (size_t k = i; k < num_columns; ++k) {
                     data_[i][k] /= pivot;
-                    result[i][k] /= pivot;
+                }
+                for (size_t k = 0; k < other_num_columns; ++k) {
+                    augementPart[i][k] /= pivot;
                 }
             }
 
@@ -127,7 +144,9 @@ public:
                 const T pivot = data_[j][i];
                 for (size_t k = i; k < num_columns; ++k) {
                     data_[j][k] -= data_[i][k] * pivot;
-                    result[j][k] -= result[i][k] * pivot;
+                }
+                for (size_t k = 0; k < other_num_columns; ++k) {
+                    augementPart[j][k] -= augementPart[i][k] * pivot;
                 }
             }
         }
@@ -138,25 +157,15 @@ public:
                 const T pivot = data_[j][i];
                 for (int64_t k = i; k >= 0; ++k) {
                     data_[j][k] -= data_[i][k] * pivot;
-                    result[j][k] -= result[i][k] * pivot;
+                }
+                for (size_t k = 0; k < other_num_columns; ++k) {
+                    augementPart[j][k] -= augementPart[i][k] * pivot;
                 }
             }
         }
 
-        return result;
+        return augementPart;
     }
-
-    template <size_t other_num_rows, size_t other_num_columns>
-    requires (num_columns == other_num_rows)
-    Matrix<num_rows, other_num_columns, T>
-    operator*(Matrix<other_num_rows, other_num_columns, T> /*other*/) const
-    {
-        return {};
-    }
-
-private:
-    Data<num_rows, num_columns, T> data_;
-    std::optional<Data<num_rows, num_columns, T>> inversed_;
 };
 
 } // impl
@@ -217,7 +226,7 @@ Matrix<num_rows, other_num_columns, T>
 Matrix<num_rows, num_columns, T>::operator*(
     const Matrix<other_num_rows, other_num_columns, T>& other
 ) const {
-    // TODO: try to improve perfomance
+    // TODO: performance could be improved
     // https://arxiv.org/pdf/1609.00076.pdf
     // https://habr.com/ru/post/359272/
     Matrix<num_rows, other_num_columns, T> result;
@@ -233,6 +242,20 @@ Matrix<num_rows, num_columns, T>::operator*(
 
     result.setInitialized();
     return result;
+}
+
+template <size_t num_rows, size_t num_columns, typename T>
+const typename Matrix<num_rows, num_columns, T>::Column&
+Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) const 
+{
+    return data_[rowInd];
+}
+
+template <size_t num_rows, size_t num_columns, typename T>
+typename Matrix<num_rows, num_columns, T>::Column&
+Matrix<num_rows, num_columns, T>::operator[](size_t rowInd)
+{
+    return data_[rowInd];
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
