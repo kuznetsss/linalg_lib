@@ -4,45 +4,40 @@
 #include <array>
 #include <vector>
 
+namespace linalg {
+
+namespace impl {
+
+template <size_t num_rows, size_t num_columns, typename T>
+class Data;
+
+}
+
 template <size_t num_rows, size_t num_columns, typename T>
 class Matrix {
 public:
     using value_type = T;
-    static const size_t rows_number = num_rows;
-    static const size_t columns_number = num_columns;
-    static const size_t elements_number = num_columns * num_rows;
+    using DataStorage = impl::Data<num_rows, num_columns, T>;
+    static const size_t elementsNumber = DataStorage::elementsNumber;
 
     Matrix() = default;
 
     template<typename U>
-    Matrix& operator=(U s) {
-        data_[initialized_] = s;
-        ++initialized_;
-        return *this;
-    }
+    Matrix& operator=(U u);
 
     template<typename U>
-    Matrix& operator,(U s) {
-        data_[initialized_] = s;
-        ++initialized_;
-        return *this;
-    }
+    Matrix& operator,(U u);
 
-    T determinant() const
-    {
-        T result = 0;
+    bool isInitialized() const noexcept;
+    void setInitialized() noexcept;
 
-    }
-
-    template<size_t cols>
-    Matrix<rows_number, cols, T> operator*(Matrix<columns_number, cols, T>& other)
-    {
-        return {};
-    }
+    template<size_t other_num_rows, size_t other_num_columns>
+    requires (num_rows == other_num_rows)
+    Matrix<num_rows, other_num_columns, T>
+    operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const;
 
 private:
-    std::array<T, elements_number> data_;
-    size_t initialized_ = 0;
+    DataStorage data_;
 };
 
 template <size_t num_rows, typename T>
@@ -56,4 +51,7 @@ template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
 Matrix<num_rows, num_columns, T> inverse(const Matrix<num_columns, num_columns, T>& m);
 
+}
 
+#define LINALG_MATRIX_INCLUDED
+#include "impl/matrix_impl.h"

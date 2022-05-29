@@ -18,7 +18,7 @@ int main() {
         1, 2, -1;
     b = 5, -2, 2;
     // solve for x
-    x = inverse(A) * b;
+    // x = inverse(A) * b;
     // std::cout << "solution: " << transpose(x) << std::endl;
     return 0;
 }
