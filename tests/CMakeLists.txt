@@ -1,1 +1,2 @@
-add_subdirectory(test_from_example)
+add_subdirectory(integration)
+add_subdirectory(unit)
