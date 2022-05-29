@@ -23,40 +23,41 @@ public:
     using value_type = T;
     static const size_t elementsNumber = DataStorage::elementsNumber;
 
-    Matrix() = default;
+    constexpr Matrix() = default;
 
-    Matrix(const Matrix& other) = default;
-    Matrix(Matrix&& other) = default;
-
-    template<typename U>
-    requires std::is_convertible_v<U, T>
-    Matrix& operator=(U u);
-
-    Matrix& operator=(const Matrix& other);
-    Matrix& operator=(Matrix&& other);
+    constexpr Matrix(const Matrix& other) = default;
+    constexpr Matrix(Matrix&& other) = default;
 
     template<typename U>
     requires std::is_convertible_v<U, T>
-    Matrix& operator,(U u);
+    constexpr Matrix& operator=(U u);
 
-    bool isInitialized() const noexcept;
-    void setInitialized() noexcept;
+    constexpr Matrix& operator=(const Matrix& other);
+    constexpr Matrix& operator=(Matrix&& other);
+
+    template<typename U>
+    requires std::is_convertible_v<U, T>
+    constexpr Matrix& operator,(U u);
+
+    constexpr bool isInitialized() const noexcept;
+    constexpr void setInitialized() noexcept;
 
     template<size_t other_num_rows, size_t other_num_columns>
     requires (num_rows == other_num_rows)
-    Matrix<num_rows, other_num_columns, T>
+    constexpr Matrix<num_rows, other_num_columns, T>
     operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const;
 
-    const Column& operator[](size_t rowInd) const;
-    Column& operator[](size_t rowInd);
+    constexpr const Column& operator[](size_t rowInd) const;
+    constexpr Column& operator[](size_t rowInd);
 
     template<size_t rows, size_t columns, typename U>
     // TODO: add requires is printable
-    friend std::ostream&
+    // TODO: Change ostream to any stream type
+    constexpr friend std::ostream&
     operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix);
 
 private:
-    explicit Matrix(DataStorage data);
+    constexpr explicit Matrix(DataStorage data);
     friend impl::Inversed<num_rows, num_columns, T>;
     DataStorage data_;
 };
@@ -67,11 +68,11 @@ using Vector = Matrix<num_rows, 1, T>;
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
-impl::Inversed<num_rows, num_columns, T>
+constexpr impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m);
 
 template <size_t num_rows, size_t num_columns, typename T>
-Matrix<num_columns, num_rows, T>
+constexpr Matrix<num_columns, num_rows, T>
 transpose(const Matrix<num_rows, num_columns, T>& other);
 
 } // linalg

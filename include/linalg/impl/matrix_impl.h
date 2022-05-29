@@ -39,9 +39,9 @@ public:
     using Column = std::array<T, num_columns>;
     static const size_t elementsNumber = num_columns * num_rows;
 
-    Data() = default;
+    constexpr Data() = default;
 
-    static Data ones() {
+    static constexpr Data ones() {
         Data d;
         for (size_t i = 0; i < num_rows; ++i) {
             for (size_t j = 0; j < num_columns; ++j) {
@@ -52,7 +52,7 @@ public:
         return d;
     }
 
-    void append(const T t)
+    constexpr void append(const T t)
     {
         if (initialized_ == elementsNumber) {
             return;
@@ -63,21 +63,24 @@ public:
         ++initialized_;
     }
 
-    bool isInitialized() const noexcept { return initialized_ == elementsNumber; }
+    constexpr bool isInitialized() const noexcept
+    {
+        return initialized_ == elementsNumber;
+    }
 
-    void setInitialized() noexcept { initialized_ = true; }
+    constexpr void setInitialized() noexcept { initialized_ = true; }
 
-    const Column& operator[](const size_t columnIndex) const noexcept
+    constexpr const Column& operator[](const size_t columnIndex) const noexcept
     {
         return data_[columnIndex];
     }
 
-    Column& operator[](const size_t columnIndex) noexcept
+    constexpr Column& operator[](const size_t columnIndex) noexcept
     {
         return data_[columnIndex];
     }
 
-    void swapRows(const size_t lhs, const size_t rhs)
+    constexpr void swapRows(const size_t lhs, const size_t rhs)
     {
         for (auto& column : data_) {
             std::swap(column[lhs], column[rhs]);
@@ -93,17 +96,17 @@ private:
 template <size_t num_rows, size_t num_columns, typename T>
 class Inversed {
 public:
-    Inversed(const Matrix<num_rows, num_columns, T>& m)
+    constexpr Inversed(const Matrix<num_rows, num_columns, T>& m)
         requires (num_rows == num_columns) : data_(m.data_) {}
 
-    operator Matrix<num_rows, num_columns, T>()
+    constexpr operator Matrix<num_rows, num_columns, T>()
     {
        return gaussElimination(Matrix<num_rows, num_columns, T>::ones());
     }
 
     template <size_t other_num_rows, size_t other_num_columns>
     requires (num_columns == other_num_rows)
-    Matrix<num_rows, other_num_columns, T>
+    constexpr Matrix<num_rows, other_num_columns, T>
     operator*(Matrix<other_num_rows, other_num_columns, T> other)
     {
         return gaussElimination(other);
@@ -115,7 +118,7 @@ private:
 
     template <size_t other_num_rows, size_t other_num_columns>
     requires (num_rows == other_num_rows)
-    Matrix<num_rows, other_num_columns, T>
+    constexpr Matrix<num_rows, other_num_columns, T>
     gaussElimination(Matrix<other_num_rows, other_num_columns, T> augementPart)
     {
         // TODO: check determinant is not zero
@@ -173,7 +176,7 @@ private:
 template <size_t num_rows, size_t num_columns, typename T>
 template<typename U>
 requires std::is_convertible_v<U, T>
-Matrix<num_rows, num_columns, T>&
+constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(U u)
 {
     data_.append(static_cast<T>(u));
@@ -181,7 +184,7 @@ Matrix<num_rows, num_columns, T>::operator=(U u)
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-Matrix<num_rows, num_columns, T>&
+constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(
     const Matrix<num_rows, num_columns, T>& other)
 {
@@ -190,7 +193,7 @@ Matrix<num_rows, num_columns, T>::operator=(
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-Matrix<num_rows, num_columns, T>&
+constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(Matrix<num_rows, num_columns, T>&& other)
 {
     data_ = std::move(other.data_);
@@ -200,7 +203,7 @@ Matrix<num_rows, num_columns, T>::operator=(Matrix<num_rows, num_columns, T>&& o
 template <size_t num_rows, size_t num_columns, typename T>
 template<typename U>
 requires std::is_convertible_v<U, T>
-Matrix<num_rows, num_columns, T>&
+constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator,(U u)
 {
     data_.append(u);
@@ -208,13 +211,13 @@ Matrix<num_rows, num_columns, T>::operator,(U u)
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-bool Matrix<num_rows, num_columns, T>::isInitialized() const noexcept
+constexpr bool Matrix<num_rows, num_columns, T>::isInitialized() const noexcept
 {
     return data_.isInitialized();
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
+constexpr void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
 {
     data_.setInitialized();
 }
@@ -222,7 +225,7 @@ void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
 template <size_t num_rows, size_t num_columns, typename T>
 template<size_t other_num_rows, size_t other_num_columns>
 requires (num_rows == other_num_rows)
-Matrix<num_rows, other_num_columns, T>
+constexpr Matrix<num_rows, other_num_columns, T>
 Matrix<num_rows, num_columns, T>::operator*(
     const Matrix<other_num_rows, other_num_columns, T>& other
 ) const {
@@ -245,21 +248,21 @@ Matrix<num_rows, num_columns, T>::operator*(
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-const typename Matrix<num_rows, num_columns, T>::Column&
-Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) const 
+constexpr const typename Matrix<num_rows, num_columns, T>::Column&
+Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) const
 {
     return data_[rowInd];
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-typename Matrix<num_rows, num_columns, T>::Column&
+constexpr typename Matrix<num_rows, num_columns, T>::Column&
 Matrix<num_rows, num_columns, T>::operator[](size_t rowInd)
 {
     return data_[rowInd];
 }
 
 template<size_t rows, size_t columns, typename U>
-std::ostream&
+constexpr std::ostream&
 operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix)
 {
     for (size_t i = 0; i < rows; ++i) {
@@ -277,7 +280,7 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix)
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) :
+constexpr Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) :
     data_(std::move(data))
 {
     data_.setInitialized();
@@ -285,14 +288,14 @@ Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) :
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
-impl::Inversed<num_rows, num_columns, T>
+constexpr impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m)
 {
     return impl::Inversed(m);
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-Matrix<num_columns, num_rows, T>
+constexpr Matrix<num_columns, num_rows, T>
 transpose(const Matrix<num_rows, num_columns, T>& other)
 {
     Matrix<num_columns, num_rows, T> result;
