@@ -1,7 +1,5 @@
 #pragma once
-#include <cstddef>
 #include <iostream>
-#include <array>
 
 namespace linalg {
 
