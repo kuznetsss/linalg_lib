@@ -2,7 +2,6 @@
 #include <cstddef>
 #include <iostream>
 #include <array>
-#include <vector>
 
 namespace linalg {
 
@@ -51,6 +50,10 @@ public:
     const Column& operator[](size_t rowInd) const;
     Column& operator[](size_t rowInd);
 
+    template<size_t rows, size_t columns, typename U>
+    // TODO: add requires is printable
+    friend std::ostream&
+    operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix);
 
 private:
     explicit Matrix(DataStorage data);
@@ -66,6 +69,10 @@ template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
 impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m);
+
+template <size_t num_rows, size_t num_columns, typename T>
+Matrix<num_columns, num_rows, T>
+transpose(const Matrix<num_rows, num_columns, T>& other);
 
 } // linalg
 

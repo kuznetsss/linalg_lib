@@ -258,6 +258,24 @@ Matrix<num_rows, num_columns, T>::operator[](size_t rowInd)
     return data_[rowInd];
 }
 
+template<size_t rows, size_t columns, typename U>
+std::ostream&
+operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix)
+{
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < columns; ++j) {
+            ost << matrix.data_[i][j];
+            if (j + 1 != columns) {
+                ost << ", ";
+            }
+        }
+        if (i + 1 != columns) {
+            ost << "\n";
+        }
+    }
+    return ost;
+}
+
 template <size_t num_rows, size_t num_columns, typename T>
 Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) :
     data_(std::move(data))
@@ -271,6 +289,19 @@ impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m)
 {
     return impl::Inversed(m);
+}
+
+template <size_t num_rows, size_t num_columns, typename T>
+Matrix<num_columns, num_rows, T>
+transpose(const Matrix<num_rows, num_columns, T>& other)
+{
+    Matrix<num_columns, num_rows, T> result;
+    for (size_t i = 0; i < num_rows; ++i) {
+        for (size_t j = 0; j < num_rows; ++j) {
+            result[j][i] = other[i][j];
+        }
+    }
+    return result;
 }
 
 } // linalg
