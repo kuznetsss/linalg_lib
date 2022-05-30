@@ -1,5 +1,7 @@
 #pragma once
 
+#include "check_include.h"
+
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -12,6 +14,7 @@ public:
     using Column = std::array<T, num_columns>;
     static const size_t elementsNumber = num_columns * num_rows;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     constexpr Data() noexcept = default;
 
     static constexpr Data ones() noexcept {

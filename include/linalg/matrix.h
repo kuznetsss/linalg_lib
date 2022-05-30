@@ -51,11 +51,6 @@ public:
     constexpr const Column& operator[](size_t rowInd) const noexcept;
     constexpr Column& operator[](size_t rowInd) noexcept;
 
-    template<size_t rows, size_t columns, typename U>
-    // TODO: add requires is printable
-    constexpr friend std::ostream&
-    operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix) noexcept;
-
 private:
     constexpr explicit Matrix(DataStorage data) noexcept;
 
@@ -67,6 +62,10 @@ private:
 template <size_t num_rows, typename T>
 using Vector = Matrix<num_rows, 1, T>;
 
+template<size_t rows, size_t columns, typename T>
+// TODO: add requires is printable
+constexpr std::ostream&
+operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept;
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)

@@ -1,12 +1,6 @@
 #pragma once
 
-#ifndef LINALG_MATRIX_INCLUDED
-static_assert( // NOLINT
-    false,
-    "\"matrix_impl.h\" shouldn't be included directly. "
-    "Include \"matrix.h\" instead."
-);
-#endif
+#include "check_include.h"
 
 #include "data_impl.h"
 #include "inversed_impl.h"
@@ -105,13 +99,20 @@ Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) noexcept
     return data_[rowInd];
 }
 
-template<size_t rows, size_t columns, typename U>
+template <size_t num_rows, size_t num_columns, typename T>
+constexpr Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) noexcept :
+    data_(std::move(data))
+{
+    data_.setInitialized();
+}
+
+template<size_t rows, size_t columns, typename T>
 constexpr std::ostream&
-operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix) noexcept
+operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept
 {
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < columns; ++j) {
-            ost << matrix.data_[i][j];
+            ost << matrix[i][j];
             if (j + 1 != columns) {
                 ost << ", ";
             }
@@ -121,13 +122,6 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix) noexcept
         }
     }
     return ost;
-}
-
-template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) noexcept :
-    data_(std::move(data))
-{
-    data_.setInitialized();
 }
 
 template <size_t num_rows, size_t num_columns, typename T>

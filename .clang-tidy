@@ -47,8 +47,6 @@ Checks: >
   cppcoreguidelines-narrowing-conversions,
   cppcoreguidelines-no-malloc,
   cppcoreguidelines-prefer-member-initializer,
-  cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-  cppcoreguidelines-pro-bounds-constant-array-index,
   cppcoreguidelines-pro-bounds-pointer-arithmetic,
   cppcoreguidelines-pro-type-cstyle-cast,
   cppcoreguidelines-pro-type-member-init,
@@ -126,4 +124,7 @@ Checks: >
   readability-simplify-boolean-expr,
   readability-simplify-subscript-expr,
   readability-static-definition-in-anonymous-namespace,
-  readability-use-anyofallof,
+  readability-use-anyofallof
+
+HeaderFilterRegex: '.*'
+WarningsAsErrors: '*'

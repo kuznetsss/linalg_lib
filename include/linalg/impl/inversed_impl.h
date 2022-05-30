@@ -1,5 +1,7 @@
 #pragma once
 
+#include "check_include.h"
+
 #include <linalg/matrix.h>
 
 #include <array>
