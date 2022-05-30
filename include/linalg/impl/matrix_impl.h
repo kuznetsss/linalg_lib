@@ -115,7 +115,7 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix)
                 ost << ", ";
             }
         }
-        if (i + 1 != columns) {
+        if (i + 1 != rows) {
             ost << "\n";
         }
     }

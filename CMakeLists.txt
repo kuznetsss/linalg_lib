@@ -7,14 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# TODO add debug, release, release-lto, masn, asan build types
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+set(CMAKE_EXE_LINKER_FLAGS -fuse-ld=lld)
+
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g -march=native")
 set(CMAKE_CXX_FLAGS_RELEASE-LTO "-O3 -g -flto=full -march=native")
-set(CMAKE_CXX_FLAGS_MSAN "-O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+set(CMAKE_CXX_FLAGS_MSAN "-O1 -g -fsanitize=memory -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 set(CMAKE_CXX_FLAGS_ASAN "-O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 
-# TODO add compile warnings
 add_compile_options(-Werror -Wall -Wextra)
 
 add_library(linalg INTERFACE)

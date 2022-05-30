@@ -15,30 +15,51 @@ jobs:
       - name: clang-format check
         run: clang-format -Werror --dry-run `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
 
-  build_and_clang-tidy_check:
-    name: Build and run clang-tidy check
+  clang-tidy_check:
+    name: clang-tidy check
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Install clang and clang-tidy
         run: |
-          sudo apt install -y clang clang-tidy
+          sudo apt install -y clang-tidy
           clang-tidy --version
       - name: build
-        run: |
-          cmake -B build .
-          cmake --build build -j2 
+        run: cmake -B build .
       - name: clang-tidy check
         run: clang-tidy `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
 
+  build_and_run_tests:
+    name: build and run tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        build_type: ['Debug', 'Release', 'Release-Lto', 'Msan', 'Asan']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install clang and lld
+        run: |
+          sudo apt install -y clang lld
+          clang --version
+          ld.lld --version
+      - name: build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -B build .
+          cmake --build ./build -j2
+      - name: run unit tests
+        run: ./build/tests/unit/unit_tests
+      - name: run integration tests
+        run: ./build/tests/integration/test_from_example/run_test.sh
+
   send-telegram-message-on-failure:
     runs-on: ubuntu-22.04
-    needs: [clang-format_check, build_and_clang-tidy_check]
+    needs: [clang-format_check, clang-tidy_check, build_and_run_tests]
     name: Send error message to telegram
     if: |
       always() && (
         needs.clang-format_check.result == 'failure'
-        || needs.build_and_clang-tidy_check.result == 'failure'
+        || needs.clang-tidy_check.result == 'failure'
+        || needs.build_and_run_tests.result == 'failure'
       )
     steps:
       - uses: kuznetsss/telegram_text_message_action@dev
