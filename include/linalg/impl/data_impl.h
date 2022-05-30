@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <cstddef>
 
 namespace linalg::impl {
@@ -29,8 +30,10 @@ public:
         if (initialized_ == elementsNumber) {
             return *this;
         }
-        const size_t row = initialized_ % num_rows ;
-        const size_t column = initialized_ - row * num_columns;
+        const size_t row = initialized_ / num_columns ;
+        const size_t column = initialized_ % num_columns;
+        assert(0 <= row && row < num_rows);
+        assert(0 <= column && column < num_columns);
         data_[row][column] = t;
         ++initialized_;
         if (initialized_ == elementsNumber) {
@@ -46,14 +49,16 @@ public:
 
     constexpr void setInitialized() noexcept { initialized_ = elementsNumber; }
 
-    constexpr const Column& operator[](const size_t columnIndex) const noexcept
+    constexpr const Column& operator[](const size_t rowIndex) const noexcept
     {
-        return data_[columnIndex];
+        assert(0 <= rowIndex && rowIndex < num_rows);
+        return data_[rowIndex];
     }
 
-    constexpr Column& operator[](const size_t columnIndex) noexcept
+    constexpr Column& operator[](const size_t rowIndex) noexcept
     {
-        return data_[columnIndex];
+        assert(0 <= rowIndex && rowIndex < num_rows);
+        return data_[rowIndex];
     }
 
     constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept

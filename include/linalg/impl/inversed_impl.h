@@ -47,7 +47,7 @@ private:
     template <size_t other_num_rows, size_t other_num_columns>
     requires (num_rows == other_num_rows)
     constexpr Matrix<num_rows, other_num_columns, T>
-    gaussElimination(Matrix<other_num_rows, other_num_columns, T> augementPart) noexcept
+    gaussElimination(Matrix<other_num_rows, other_num_columns, T> augmentPart) noexcept
     {
         // TODO: check determinant is not zero
 
@@ -66,7 +66,7 @@ private:
                     data_[i][k] /= pivot;
                 }
                 for (size_t k = 0; k < other_num_columns; ++k) {
-                    augementPart[i][k] /= pivot;
+                    augmentPart[i][k] /= pivot;
                 }
             }
 
@@ -77,7 +77,7 @@ private:
                     data_[j][k] -= data_[i][k] * pivot;
                 }
                 for (size_t k = 0; k < other_num_columns; ++k) {
-                    augementPart[j][k] -= augementPart[i][k] * pivot;
+                    augmentPart[j][k] -= augmentPart[i][k] * pivot;
                 }
             }
         }
@@ -90,12 +90,12 @@ private:
                     data_[j][k] -= data_[i][k] * pivot;
                 }
                 for (size_t k = 0; k < other_num_columns; ++k) {
-                    augementPart[j][k] -= augementPart[i][k] * pivot;
+                    augmentPart[j][k] -= augmentPart[i][k] * pivot;
                 }
             }
         }
 
-        return augementPart;
+        return augmentPart;
     }
 };
 

@@ -1,5 +1,6 @@
-#include <linalg/matrix.h>
 #include "common.h"
+
+#include <linalg/matrix.h>
 
 using namespace linalg::impl;
 
@@ -26,7 +27,7 @@ void testData()
     {
         Data<2, 3, int> d;
         d.append(0).append(1).append(2)
-            .append(3).append(4).append(5);
+            .append(3).append(4).append(5); // NOLINT
         ASSERT(d.isInitialized());
         d.swapRows(0, 1);
         ASSERT_EQ(d[0][0], 1);
