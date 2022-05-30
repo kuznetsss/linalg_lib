@@ -17,8 +17,8 @@ void testMatrix()
     {
         Matrix<3, 2, int> m;
         m = 2, 3,
-            5, 4,
-            11, 23;
+            5, 4,   // NOLINT(readability-magic-numbers)
+            11, 23; // NOLINT(readability-magic-numbers)
         ASSERT(m.isInitialized());
         ASSERT_EQ(m[0][0], 2);
         ASSERT_EQ(m[0][1], 3);

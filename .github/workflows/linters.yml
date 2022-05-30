@@ -27,7 +27,7 @@ jobs:
       - name: build
         run: cmake -B build .
       - name: clang-tidy check
-        run: clang-tidy `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
+        run: clang-tidy `find include/ tests/unit -type f -regex '\(.*\.cpp$\|.*\.h$\)'`
 
   build_and_run_tests:
     name: build and run tests

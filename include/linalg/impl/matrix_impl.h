@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef LINALG_MATRIX_INCLUDED
-static_assert(
+static_assert( // NOLINT
     false,
     "\"matrix_impl.h\" shouldn't be included directly. "
     "Include \"matrix.h\" instead."
