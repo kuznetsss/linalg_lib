@@ -11,9 +11,9 @@ public:
     using Column = std::array<T, num_columns>;
     static const size_t elementsNumber = num_columns * num_rows;
 
-    constexpr Data() = default;
+    constexpr Data() noexcept = default;
 
-    static constexpr Data ones() {
+    static constexpr Data ones() noexcept {
         Data d;
         for (size_t i = 0; i < num_rows; ++i) {
             for (size_t j = 0; j < num_columns; ++j) {
@@ -24,7 +24,7 @@ public:
         return d;
     }
 
-    constexpr Data& append(const T t)
+    constexpr Data& append(const T t) noexcept
     {
         if (initialized_ == elementsNumber) {
             return *this;
@@ -56,7 +56,7 @@ public:
         return data_[columnIndex];
     }
 
-    constexpr void swapRows(const size_t lhs, const size_t rhs)
+    constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept
     {
         for (auto& column : data_) {
             std::swap(column[lhs], column[rhs]);
@@ -69,4 +69,4 @@ private:
     size_t initialized_ = 0;
 };
 
-}
+} // namespace linalg::impl
