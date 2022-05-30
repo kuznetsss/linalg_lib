@@ -20,6 +20,8 @@ public:
     using Column = typename DataStorage::Column;
     using value_type = T;
     static const size_t elementsNumber = DataStorage::elementsNumber;
+    static const size_t rowsNumber = num_rows;
+    static const size_t columnsNumber = num_columns;
 
     constexpr Matrix() = default;
 
@@ -50,13 +52,14 @@ public:
 
     template<size_t rows, size_t columns, typename U>
     // TODO: add requires is printable
-    // TODO: Change ostream to any stream type
     constexpr friend std::ostream&
     operator<<(std::ostream& ost, const Matrix<rows, columns, U>& matrix);
 
 private:
     constexpr explicit Matrix(DataStorage data);
+
     friend impl::Inversed<num_rows, num_columns, T>;
+
     DataStorage data_;
 };
 

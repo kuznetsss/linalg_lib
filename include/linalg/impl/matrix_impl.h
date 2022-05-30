@@ -8,9 +8,10 @@ static_assert(
 );
 #endif
 
-#include <linalg/matrix.h>
 #include "data_impl.h"
 #include "inversed_impl.h"
+
+#include <linalg/matrix.h>
 
 #include <optional>
 
@@ -81,7 +82,7 @@ Matrix<num_rows, num_columns, T>::operator*(
         for (size_t k = 0; k < other_num_columns; ++k) {
             result[i][k] = 0;
             for (size_t j = 0; j < num_columns; ++j) {
-                result[i][k] += data_[i][j] * other.data_[j][k];
+                result[i][k] += data_[i][j] * other[j][k];
             }
         }
     }
