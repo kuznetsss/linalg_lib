@@ -11,7 +11,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g -march=native")
 set(CMAKE_CXX_FLAGS_RELEASE-LTO "-O3 -g -flto=full -march=native")
-set(CMAKE_CXX_FLAGS_MSAN "-O3  ")
+set(CMAKE_CXX_FLAGS_MSAN "-O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 set(CMAKE_CXX_FLAGS_ASAN "-O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 
 # TODO add compile warnings

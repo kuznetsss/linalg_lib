@@ -143,7 +143,7 @@ transpose(const Matrix<num_rows, num_columns, T>& other)
 {
     Matrix<num_columns, num_rows, T> result;
     for (size_t i = 0; i < num_rows; ++i) {
-        for (size_t j = 0; j < num_rows; ++j) {
+        for (size_t j = 0; j < num_columns; ++j) {
             result[j][i] = other[i][j];
         }
     }

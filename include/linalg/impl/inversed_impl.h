@@ -82,10 +82,10 @@ private:
         }
 
         // Backward elimination
-        for (int64_t i = num_rows - 1; i >= 0; ++i) {
-            for (int64_t j = i - 1; j >= 0; ++j) {
+        for (int64_t i = num_rows - 1; i >= 0; --i) {
+            for (int64_t j = i - 1; j >= 0; --j) {
                 const T pivot = data_[j][i];
-                for (int64_t k = i; k >= 0; ++k) {
+                for (int64_t k = i; k >= 0; --k) {
                     data_[j][k] -= data_[i][k] * pivot;
                 }
                 for (size_t k = 0; k < other_num_columns; ++k) {
