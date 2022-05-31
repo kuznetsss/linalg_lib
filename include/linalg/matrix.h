@@ -29,6 +29,8 @@ public:
     constexpr Matrix(const Matrix& other) noexcept = default ;
     constexpr Matrix(Matrix&& other) noexcept = default;
 
+    constexpr static Matrix ones() noexcept;
+
     template<typename U>
     requires std::is_convertible_v<U, T>
     constexpr Matrix& operator=(U u) noexcept;

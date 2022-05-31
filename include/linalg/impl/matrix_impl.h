@@ -12,6 +12,14 @@
 namespace linalg {
 
 template <size_t num_rows, size_t num_columns, typename T>
+constexpr Matrix<num_rows, num_columns, T>
+Matrix<num_rows, num_columns, T>::ones() noexcept
+{
+    auto dataOnes = DataStorage::ones();
+    return Matrix(std::move(dataOnes));
+}
+
+template <size_t num_rows, size_t num_columns, typename T>
 template<typename U>
 requires std::is_convertible_v<U, T>
 constexpr Matrix<num_rows, num_columns, T>&
