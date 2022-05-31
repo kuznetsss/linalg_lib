@@ -19,6 +19,7 @@ constexpr size_t findFirstNotZeroElement(
     while (ind < size && a[ind] == 0) {
         ++ind;
     }
+    assert(ind != size);
     return ind;
 }
 
@@ -64,6 +65,7 @@ private:
             // Divide all element of i-th column by the pivot
             {
                 const T pivot = data_[i][i];
+                assert(pivot != 0);
                 for (size_t k = i; k < num_columns; ++k) {
                     data_[i][k] /= pivot;
                 }

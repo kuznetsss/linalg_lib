@@ -54,18 +54,22 @@ public:
 
     constexpr const Column& operator[](const size_t rowIndex) const noexcept
     {
-        assert(0 <= rowIndex && rowIndex < num_rows);
+        assert(isInitialized());
+        assert(rowIndex < num_rows);
         return data_[rowIndex];
     }
 
     constexpr Column& operator[](const size_t rowIndex) noexcept
     {
-        assert(0 <= rowIndex && rowIndex < num_rows);
+        assert(rowIndex < num_rows);
         return data_[rowIndex];
     }
 
     constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept
     {
+        assert(isInitialized());
+        assert(lhs < num_columns);
+        assert(rhs < num_columns);
         for (auto& column : data_) {
             std::swap(column[lhs], column[rhs]);
         }
