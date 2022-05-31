@@ -157,6 +157,7 @@ transpose(const Matrix<num_rows, num_columns, T>& other) noexcept
             result[j][i] = other[i][j];
         }
     }
+    result.setInitialized();
     return result;
 }
 
