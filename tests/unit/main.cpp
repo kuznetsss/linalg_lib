@@ -2,6 +2,7 @@
 
 void testData();
 void testMatrix();
+void testInverted();
 
 int main()
 {
@@ -9,6 +10,7 @@ int main()
     try {
         testData();
         testMatrix();
+        testInverted();
     } catch(std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
         return 1;

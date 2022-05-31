@@ -3,7 +3,7 @@
 #include "check_include.h"
 
 #include "data_impl.h"
-#include "inversed_impl.h"
+#include "inverted_impl.h"
 
 #include <linalg/matrix.h>
 
@@ -126,10 +126,10 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
-constexpr impl::Inversed<num_rows, num_columns, T>
+constexpr impl::Inverted<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m) noexcept
 {
-    return impl::Inversed(m);
+    return impl::Inverted(m);
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
