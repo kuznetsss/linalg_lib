@@ -10,8 +10,8 @@ The library itself is header only so only tests are needed to be compiled.
 ### Requirements
 
 Requirements to build linalg from source are:
-- C++ compiler clang 13.0.1 or higher (gcc also could be used see (below)[### Cmake options])
-- C++ linker lld 13.0.1 or higher (any other linker also could be used see (below)[### Cmake options])
+- C++ compiler clang 13.0.1 or higher (set by default). GCC 12.1.0 has also been tested.
+- C++ linker lld 13.0.1 or higher (any other linker also could be used see below)
 - CMake (tested with 3.23.1)
 
 ### CMake options
@@ -39,7 +39,7 @@ $ cmake --build <build_dir>
 
 ### Running tests
 
-There are two tests awaliable:
+There are two tests avaliable:
 - Unit tests checking all classes.
 To run use:
 ```
