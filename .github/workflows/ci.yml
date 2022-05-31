@@ -1,0 +1,71 @@
+name: CI
+
+on: [push]
+
+jobs:
+  #clang-format_check:
+  #  name: clang-format check
+  #  runs-on: ubuntu-22.04
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - name: Install clang-format
+  #      run: |
+  #        sudo apt install -y clang-format
+  #        clang-format --version
+  #    - name: clang-format check
+  #      run: clang-format -Werror --dry-run `find include/ tests/ -type f -regex '\(.*cpp\|.*h\)'`
+
+  clang-tidy_check:
+    name: clang-tidy check
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install clang and clang-tidy
+        run: |
+          sudo apt install -y clang-tidy
+          clang-tidy --version
+      - name: build
+        run: cmake -B build .
+      - name: clang-tidy check
+        run: clang-tidy `find include/ tests/unit -type f -regex '.*\.cpp$'`
+
+  build_and_run_tests:
+    name: build and run tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        build_type: ['Debug', 'Release', 'Release-Lto', 'Msan', 'Asan']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install clang and lld
+        run: |
+          sudo apt install -y clang lld
+          clang --version
+          ld.lld --version
+      - name: build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -B build .
+          cmake --build ./build -j2
+      - name: run unit tests
+        run: ./build/tests/unit/unit_tests
+      - name: run integration tests
+        run: ./build/tests/integration/test_from_example/run_test.sh
+
+  send-telegram-message-on-failure:
+    runs-on: ubuntu-22.04
+    needs: [clang-tidy_check, build_and_run_tests]
+    name: Send error message to telegram
+    if: |
+      always() && (
+        needs.clang-tidy_check.result == 'failure'
+        || needs.build_and_run_tests.result == 'failure'
+      )
+    steps:
+      - uses: kuznetsss/telegram_text_message_action@dev
+        with:
+          message: |
+            <b>Github workflow failed</b>
+            CI <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">action</a> in <a href=\"${{ github.server_url }}/${{ github.repository }}\">${{ github.repository }}</a> failed.
+          format: html
+          chat_id: ${{ secrets.CHAT_ID }}
+          bot_token: ${{ secrets.BOT_TOKEN }}
