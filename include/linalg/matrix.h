@@ -9,7 +9,7 @@ template <size_t num_rows, size_t num_columns, typename T>
 class Data;
 
 template <size_t num_rows, size_t num_columns, typename T>
-class Inverted;
+class Inversed;
 
 } // namespace impl
 
@@ -56,7 +56,7 @@ public:
 private:
     constexpr explicit Matrix(DataStorage data) noexcept;
 
-    friend impl::Inverted<num_rows, num_columns, T>;
+    friend impl::Inversed<num_rows, num_columns, T>;
 
     DataStorage data_;
 };
@@ -71,7 +71,7 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept;
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
-constexpr impl::Inverted<num_rows, num_columns, T>
+constexpr impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m) noexcept;
 
 template <size_t num_rows, size_t num_columns, typename T>
