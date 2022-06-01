@@ -8,40 +8,55 @@
 
 namespace linalg::impl {
 
+
+template <size_t num_columns, typename TPtr>
+class ColumnViewImpl {
+public:
+    using value_type = std::remove_pointer_t<TPtr>;
+    static const size_t size = num_columns;
+
+    constexpr explicit ColumnViewImpl(TPtr it) noexcept : begin_(it) {}
+
+    constexpr value_type& operator[](const size_t ind) const noexcept
+    {
+        assert(ind < size);
+        return *std::next(begin_, ind);
+    }
+
+private:
+    TPtr const begin_;
+};
+
 template <size_t num_rows, size_t num_columns, typename T>
 class Data {
 public:
-    using Column = std::array<T, num_columns>;
     static const size_t elementsNumber = num_columns * num_rows;
+    using Container = std::array<T, elementsNumber>;
+    using ColumnView = ColumnViewImpl<num_columns, typename Container::iterator>;
+    using ColumnConstView =
+        ColumnViewImpl<num_columns, typename Container::const_iterator>;
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     constexpr Data() noexcept = default;
 
     static constexpr Data ones() noexcept {
         Data d;
-        for (size_t i = 0; i < num_rows; ++i) {
-            for (size_t j = 0; j < num_columns; ++j) {
-                d.data_[i][j] = i == j ? 1 : 0;
-            }
+        for (size_t i = 0; i < elementsNumber; ++i) {
+            const auto rowIndex = linearIndexToRowIndex(i);
+            const auto columnIndex = linearIndexToColumnIndex(i);
+            d.append(rowIndex == columnIndex ? 1 : 0);
         }
-        d.setInitialized();
         return d;
     }
 
     constexpr Data& append(const T t) noexcept
     {
-        if (initialized_ == elementsNumber) {
+        if (isInitialized()) {
             return *this;
         }
-        const size_t row = initialized_ / num_columns ;
-        const size_t column = initialized_ % num_columns;
-        assert(0 <= row && row < num_rows);
-        assert(0 <= column && column < num_columns);
-        data_[row][column] = t;
+        assert(initialized_ < elementsNumber);
+        data_[initialized_] = t;
         ++initialized_;
-        if (initialized_ == elementsNumber) {
-            setInitialized();
-        }
         return *this;
     }
 
@@ -52,29 +67,51 @@ public:
 
     constexpr void setInitialized() noexcept { initialized_ = elementsNumber; }
 
-    constexpr const Column& operator[](const size_t rowIndex) const noexcept
+    constexpr ColumnConstView operator[](const size_t rowIndex) const noexcept
     {
-        assert(0 <= rowIndex && rowIndex < num_rows);
-        return data_[rowIndex];
+        assert(isInitialized());
+        assert(rowIndex < num_rows);
+        return ColumnConstView{
+            std::next(data_.cbegin(), rowIndexToLinearIndex(rowIndex))
+        };
     }
 
-    constexpr Column& operator[](const size_t rowIndex) noexcept
+    constexpr ColumnView operator[](const size_t rowIndex) noexcept
     {
-        assert(0 <= rowIndex && rowIndex < num_rows);
-        return data_[rowIndex];
+        assert(rowIndex < num_rows);
+        return ColumnView{
+            std::next(data_.begin(), rowIndexToLinearIndex(rowIndex))
+        };
     }
 
     constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept
     {
-        for (auto& column : data_) {
-            std::swap(column[lhs], column[rhs]);
+        assert(isInitialized());
+        assert(lhs < num_columns);
+        assert(rhs < num_columns);
+        for (auto* it = data_.begin(); it < data_.end(); it += num_columns) {
+            std::swap(it[lhs], it[rhs]);
         }
     }
 
 private:
-    // TODO: think what is better, one array or arrays inside an array
-    std::array<Column, num_rows> data_;
+    Container data_;
     size_t initialized_ = 0;
+
+    static constexpr size_t rowIndexToLinearIndex(const size_t rowIndex) noexcept
+    {
+        return rowIndex * num_columns;
+    }
+
+    static constexpr size_t linearIndexToRowIndex(const size_t index) noexcept
+    {
+        return index / num_columns;
+    }
+
+    static constexpr size_t linearIndexToColumnIndex(const size_t index) noexcept
+    {
+        return index % num_columns;
+    }
 };
 
 } // namespace linalg::impl

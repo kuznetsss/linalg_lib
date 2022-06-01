@@ -9,14 +9,13 @@
 
 namespace linalg::impl {
 
-template<typename T, size_t size>
+template<typename TColumnView>
 constexpr size_t findFirstNotZeroElement(
-    const std::array<T, size>& a,
-    const size_t startInd
-) noexcept
+    TColumnView a,
+    const size_t startInd) noexcept
 {
     size_t ind = startInd;
-    while (ind < size && a[ind] == 0) {
+    while (ind < TColumnView::size && a[ind] == 0) {
         ++ind;
     }
     return ind;
@@ -51,12 +50,16 @@ private:
     constexpr Matrix<num_rows, other_num_columns, T>
     gaussElimination(Matrix<other_num_rows, other_num_columns, T> augmentPart) noexcept
     {
-        // TODO: check determinant is not zero
-
+        if (!data_.isInitialized() || !augmentPart.isInitialized()) {
+            return {};
+        }
         // Forward elimination
         for (size_t i = 0; i < num_rows; ++i) {
             // Put not zero element to i-th place to use it as a pivot
             const size_t ind = findFirstNotZeroElement(data_[i], i);
+            if (ind == num_columns) {
+                return {};
+            }
             if (ind != i) {
                 data_.swapRows(i, ind);
             }
@@ -64,6 +67,7 @@ private:
             // Divide all element of i-th column by the pivot
             {
                 const T pivot = data_[i][i];
+                assert(pivot != 0);
                 for (size_t k = i; k < num_columns; ++k) {
                     data_[i][k] /= pivot;
                 }

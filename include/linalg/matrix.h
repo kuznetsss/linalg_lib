@@ -17,8 +17,10 @@ template <size_t num_rows, size_t num_columns, typename T>
 class Matrix {
 public:
     using DataStorage = impl::Data<num_rows, num_columns, T>;
-    using Column = typename DataStorage::Column;
+    using ColumnView = typename DataStorage::ColumnView;
+    using ColumnConstView = typename DataStorage::ColumnConstView;
     using value_type = T;
+
     static const size_t elementsNumber = DataStorage::elementsNumber;
     static const size_t rowsNumber = num_rows;
     static const size_t columnsNumber = num_columns;
@@ -28,6 +30,8 @@ public:
 
     constexpr Matrix(const Matrix& other) noexcept = default ;
     constexpr Matrix(Matrix&& other) noexcept = default;
+
+    constexpr static Matrix ones() noexcept;
 
     template<typename U>
     requires std::is_convertible_v<U, T>
@@ -48,8 +52,8 @@ public:
     constexpr Matrix<num_rows, other_num_columns, T>
     operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const noexcept;
 
-    constexpr const Column& operator[](size_t rowInd) const noexcept;
-    constexpr Column& operator[](size_t rowInd) noexcept;
+    constexpr ColumnConstView operator[](size_t rowInd) const noexcept;
+    constexpr ColumnView operator[](size_t rowInd) noexcept;
 
 private:
     constexpr explicit Matrix(DataStorage data) noexcept;
@@ -67,6 +71,9 @@ template<size_t rows, size_t columns, typename T>
 constexpr std::ostream&
 operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept;
 
+// Returns Inversed object which could be implicitly converted to matrix
+// or multiplied by another matrix.
+// IMPORTANT: If input matrix is singular result matrix will be not initialized.
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
 constexpr impl::Inversed<num_rows, num_columns, T>
@@ -74,7 +81,7 @@ inverse(const Matrix<num_rows, num_columns, T>& m) noexcept;
 
 template <size_t num_rows, size_t num_columns, typename T>
 constexpr Matrix<num_columns, num_rows, T>
-transpose(const Matrix<num_rows, num_columns, T>& other) noexcept;
+transpose(const Matrix<num_rows, num_columns, T>& m) noexcept;
 
 } // namespace linalg
 
