@@ -79,8 +79,9 @@ Matrix<num_rows, num_columns, T>::operator*(
     // https://arxiv.org/pdf/1609.00076.pdf
     // https://habr.com/ru/post/359272/
 
-    assert(isInitialized());
-    assert(other.isInitialized());
+    if (!isInitialized() || !other.isInitialized()) {
+        return {};
+    }
 
     Matrix<num_rows, other_num_columns, T> result;
 
@@ -122,7 +123,9 @@ template<size_t rows, size_t columns, typename T>
 constexpr std::ostream&
 operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept
 {
-    assert(matrix.isInitialized());
+    if (!matrix.isInitialized()) {
+        ost << "Not_initialized";
+    }
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < columns; ++j) {
             ost << matrix[i][j];
@@ -142,19 +145,20 @@ requires (num_rows == num_columns)
 constexpr impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m) noexcept
 {
-    assert(m.isInitialized());
     return impl::Inversed(m);
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
 constexpr Matrix<num_columns, num_rows, T>
-transpose(const Matrix<num_rows, num_columns, T>& other) noexcept
+transpose(const Matrix<num_rows, num_columns, T>& m) noexcept
 {
-    assert(other.isInitialized());
+    if (!m.isInitialized()) {
+        return {};
+    }
     Matrix<num_columns, num_rows, T> result;
     for (size_t i = 0; i < num_rows; ++i) {
         for (size_t j = 0; j < num_columns; ++j) {
-            result[j][i] = other[i][j];
+            result[j][i] = m[i][j];
         }
     }
     result.setInitialized();

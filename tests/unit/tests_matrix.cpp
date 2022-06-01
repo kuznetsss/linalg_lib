@@ -4,6 +4,7 @@
 
 using linalg::Matrix;
 using linalg::Vector;
+using linalg::transpose;
 
 void testMatrix()
 {
@@ -50,5 +51,25 @@ void testMatrix()
         static_assert(decltype(mult)::columnsNumber == 1);
         ASSERT_EQ(mult[0][0], 5);
         ASSERT_EQ(mult[1][0], 11);
+    }
+    {
+        const Matrix<2, 2, int> m{};
+        ASSERT(!m.isInitialized());
+
+        const auto t = transpose(m);
+        ASSERT(!t.isInitialized());
+
+        Vector<2, int> v;
+        v = 1, 2;
+        const auto mult = m * v;
+        ASSERT(!mult.isInitialized());
+    }
+    {
+        Matrix<2, 2, int> m;
+        m = 1, 2,
+            3, 4;
+        Vector<2, int> v;
+        const auto mult = m * v;
+        ASSERT(!mult.isInitialized());
     }
 }

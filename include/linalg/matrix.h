@@ -81,7 +81,7 @@ inverse(const Matrix<num_rows, num_columns, T>& m) noexcept;
 
 template <size_t num_rows, size_t num_columns, typename T>
 constexpr Matrix<num_columns, num_rows, T>
-transpose(const Matrix<num_rows, num_columns, T>& other) noexcept;
+transpose(const Matrix<num_rows, num_columns, T>& m) noexcept;
 
 } // namespace linalg
 
