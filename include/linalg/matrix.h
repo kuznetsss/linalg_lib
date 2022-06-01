@@ -17,8 +17,10 @@ template <size_t num_rows, size_t num_columns, typename T>
 class Matrix {
 public:
     using DataStorage = impl::Data<num_rows, num_columns, T>;
-    using Column = typename DataStorage::Column;
+    using ColumnView = typename DataStorage::ColumnView;
+    using ColumnConstView = typename DataStorage::ColumnConstView;
     using value_type = T;
+
     static const size_t elementsNumber = DataStorage::elementsNumber;
     static const size_t rowsNumber = num_rows;
     static const size_t columnsNumber = num_columns;
@@ -50,8 +52,8 @@ public:
     constexpr Matrix<num_rows, other_num_columns, T>
     operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const noexcept;
 
-    constexpr const Column& operator[](size_t rowInd) const noexcept;
-    constexpr Column& operator[](size_t rowInd) noexcept;
+    constexpr ColumnConstView operator[](size_t rowInd) const noexcept;
+    constexpr ColumnView operator[](size_t rowInd) noexcept;
 
 private:
     constexpr explicit Matrix(DataStorage data) noexcept;

@@ -24,6 +24,6 @@ void testInversed()
         const auto solution = inverse(m) * v;
         ASSERT(solution.isInitialized());
         ASSERT_NEAR(solution[0][0], -2.f); // NOLINT(readability-magic-numbers)
-        ASSERT_NEAR(solution[0][1], 2.5f); // NOLINT(readability-magic-numbers)
+        ASSERT_NEAR(solution[1][0], 2.5f); // NOLINT(readability-magic-numbers)
     }
 }
