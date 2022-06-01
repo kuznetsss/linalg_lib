@@ -12,14 +12,12 @@ namespace linalg::impl {
 template<typename TColumnView>
 constexpr size_t findFirstNotZeroElement(
     TColumnView a,
-    const size_t startInd
-) noexcept
+    const size_t startInd) noexcept
 {
     size_t ind = startInd;
     while (ind < TColumnView::size && a[ind] == 0) {
         ++ind;
     }
-    assert(ind != TColumnView::size);
     return ind;
 }
 
@@ -52,12 +50,13 @@ private:
     constexpr Matrix<num_rows, other_num_columns, T>
     gaussElimination(Matrix<other_num_rows, other_num_columns, T> augmentPart) noexcept
     {
-        // TODO: check determinant is not zero
-
         // Forward elimination
         for (size_t i = 0; i < num_rows; ++i) {
             // Put not zero element to i-th place to use it as a pivot
             const size_t ind = findFirstNotZeroElement(data_[i], i);
+            if (ind == num_columns) {
+                return {};
+            }
             if (ind != i) {
                 data_.swapRows(i, ind);
             }

@@ -61,6 +61,7 @@ To use linalg in your project only `include/` directory is needed (There is an i
 Features of the library are:
 - Operations with matrices and vectors : inversion, transposition, multiplication
 - Optimized `inverse()` operations calculates inversed matrix only explicitly
+- `inverse()` returns not initialized matrix if input matrix was singular
 - Compile-time calculations: all operations are `constexpr`
 - No exceptions (except `Debug` build type): all operations are marked as `noexcept`
 - Assertions in `Debug` build type
