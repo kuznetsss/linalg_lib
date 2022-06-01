@@ -98,14 +98,14 @@ Matrix<num_rows, num_columns, T>::operator*(
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr const typename Matrix<num_rows, num_columns, T>::Column&
+constexpr const typename Matrix<num_rows, num_columns, T>::ColumnConstView
 Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) const noexcept
 {
     return data_[rowInd];
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr typename Matrix<num_rows, num_columns, T>::Column&
+constexpr typename Matrix<num_rows, num_columns, T>::ColumnView
 Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) noexcept
 {
     return data_[rowInd];

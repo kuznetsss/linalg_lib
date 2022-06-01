@@ -9,17 +9,17 @@
 
 namespace linalg::impl {
 
-template<typename T, size_t size>
+template<typename TColumnView>
 constexpr size_t findFirstNotZeroElement(
-    const std::array<T, size>& a,
+    TColumnView a,
     const size_t startInd
 ) noexcept
 {
     size_t ind = startInd;
-    while (ind < size && a[ind] == 0) {
+    while (ind < TColumnView::size && a[ind] == 0) {
         ++ind;
     }
-    assert(ind != size);
+    assert(ind != TColumnView::size);
     return ind;
 }
 
