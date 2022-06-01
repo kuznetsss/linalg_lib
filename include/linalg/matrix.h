@@ -71,6 +71,9 @@ template<size_t rows, size_t columns, typename T>
 constexpr std::ostream&
 operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept;
 
+// Returns Inversed object which could be implicitly converted to matrix
+// or multiplied by another matrix.
+// IMPORTANT: If input matrix is singular result matrix will be not initialized.
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
 constexpr impl::Inversed<num_rows, num_columns, T>

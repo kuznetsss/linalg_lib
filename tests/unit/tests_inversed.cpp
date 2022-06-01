@@ -26,4 +26,16 @@ void testInversed()
         ASSERT_NEAR(solution[0][0], -2.f); // NOLINT(readability-magic-numbers)
         ASSERT_NEAR(solution[1][0], 2.5f); // NOLINT(readability-magic-numbers)
     }
+    {
+        Matrix<2, 2, float> singular;
+        singular = 1, 2,
+                   2, 4;
+        Vector<2, float> v;
+        v = 3, 4;
+        const auto solution = inverse(singular) * v;
+        ASSERT(!solution.isInitialized());
+
+        const Matrix<2, 2, float> inversed = inverse(singular);
+        ASSERT(!inversed.isInitialized());
+    }
 }
