@@ -52,7 +52,7 @@ public:
     constexpr Matrix<num_rows, other_num_columns, T>
     operator*(const Matrix<other_num_rows, other_num_columns, T>& other) const noexcept;
 
-    constexpr const ColumnConstView operator[](size_t rowInd) const noexcept;
+    constexpr ColumnConstView operator[](size_t rowInd) const noexcept;
     constexpr ColumnView operator[](size_t rowInd) noexcept;
 
 private:

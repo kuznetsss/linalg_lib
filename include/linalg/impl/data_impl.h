@@ -89,7 +89,7 @@ public:
         assert(isInitialized());
         assert(lhs < num_columns);
         assert(rhs < num_columns);
-        for (auto it = data_.begin(); it < data_.end(); it += num_columns) {
+        for (auto* it = data_.begin(); it < data_.end(); it += num_columns) {
             std::swap(it[lhs], it[rhs]);
         }
     }
