@@ -38,4 +38,14 @@ void testInversed()
         const Matrix<2, 2, float> inversed = inverse(singular);
         ASSERT(!inversed.isInitialized());
     }
+    {
+        Matrix<2, 2, float> notInitialized;
+        Vector<2, float> v;
+        v = 3, 4;
+        const auto solution = inverse(notInitialized) * v;
+        ASSERT(!solution.isInitialized());
+
+        const Matrix<2, 2, float> inversed = inverse(notInitialized);
+        ASSERT(!inversed.isInitialized());
+    }
 }

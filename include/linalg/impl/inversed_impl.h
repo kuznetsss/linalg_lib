@@ -50,6 +50,9 @@ private:
     constexpr Matrix<num_rows, other_num_columns, T>
     gaussElimination(Matrix<other_num_rows, other_num_columns, T> augmentPart) noexcept
     {
+        if (!data_.isInitialized() || !augmentPart.isInitialized()) {
+            return {};
+        }
         // Forward elimination
         for (size_t i = 0; i < num_rows; ++i) {
             // Put not zero element to i-th place to use it as a pivot
