@@ -10,7 +10,7 @@
 namespace linalg::impl {
 
 template<typename TColumnView>
-constexpr size_t findFirstNotZeroElement(
+inline constexpr size_t findFirstNotZeroElement(
     TColumnView a,
     const size_t startInd) noexcept
 {
@@ -28,14 +28,14 @@ public:
         requires (num_rows == num_columns) : data_(m.data_) {}
 
     // NOLINTNEXTLINE(google-explicit-constructor)
-    constexpr operator Matrix<num_rows, num_columns, T>() noexcept
+    inline constexpr operator Matrix<num_rows, num_columns, T>() noexcept
     {
        return gaussElimination(Matrix<num_rows, num_columns, T>::ones());
     }
 
     template <size_t other_num_rows, size_t other_num_columns>
     requires (num_columns == other_num_rows)
-    constexpr Matrix<num_rows, other_num_columns, T>
+    inline constexpr Matrix<num_rows, other_num_columns, T>
     operator*(Matrix<other_num_rows, other_num_columns, T> other) noexcept
     {
         return gaussElimination(other);
@@ -47,7 +47,7 @@ private:
 
     template <size_t other_num_rows, size_t other_num_columns>
     requires (num_rows == other_num_rows)
-    constexpr Matrix<num_rows, other_num_columns, T>
+    inline constexpr Matrix<num_rows, other_num_columns, T>
     gaussElimination(Matrix<other_num_rows, other_num_columns, T> augmentPart) noexcept
     {
         if (!data_.isInitialized() || !augmentPart.isInitialized()) {

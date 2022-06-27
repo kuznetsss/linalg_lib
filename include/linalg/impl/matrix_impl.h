@@ -12,7 +12,7 @@
 namespace linalg {
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_rows, num_columns, T>
+inline constexpr Matrix<num_rows, num_columns, T>
 Matrix<num_rows, num_columns, T>::ones() noexcept
 {
     auto dataOnes = DataStorage::ones();
@@ -22,7 +22,7 @@ Matrix<num_rows, num_columns, T>::ones() noexcept
 template <size_t num_rows, size_t num_columns, typename T>
 template<typename U>
 requires std::is_convertible_v<U, T>
-constexpr Matrix<num_rows, num_columns, T>&
+inline constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(U u) noexcept
 {
     data_.append(static_cast<T>(u));
@@ -30,7 +30,7 @@ Matrix<num_rows, num_columns, T>::operator=(U u) noexcept
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_rows, num_columns, T>&
+inline constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(
     const Matrix<num_rows, num_columns, T>& other) noexcept
 {
@@ -39,7 +39,7 @@ Matrix<num_rows, num_columns, T>::operator=(
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_rows, num_columns, T>&
+inline constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator=(Matrix<num_rows, num_columns, T>&& other) noexcept
 {
     data_ = std::move(other.data_);
@@ -49,7 +49,7 @@ Matrix<num_rows, num_columns, T>::operator=(Matrix<num_rows, num_columns, T>&& o
 template <size_t num_rows, size_t num_columns, typename T>
 template<typename U>
 requires std::is_convertible_v<U, T>
-constexpr Matrix<num_rows, num_columns, T>&
+inline constexpr Matrix<num_rows, num_columns, T>&
 Matrix<num_rows, num_columns, T>::operator,(U u) noexcept
 {
     data_.append(u);
@@ -57,13 +57,13 @@ Matrix<num_rows, num_columns, T>::operator,(U u) noexcept
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr bool Matrix<num_rows, num_columns, T>::isInitialized() const noexcept
+inline constexpr bool Matrix<num_rows, num_columns, T>::isInitialized() const noexcept
 {
     return data_.isInitialized();
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
+inline constexpr void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
 {
     data_.setInitialized();
 }
@@ -71,7 +71,7 @@ constexpr void Matrix<num_rows, num_columns, T>::setInitialized() noexcept
 template <size_t num_rows, size_t num_columns, typename T>
 template<size_t other_num_rows, size_t other_num_columns>
 requires (num_rows == other_num_rows)
-constexpr Matrix<num_rows, other_num_columns, T>
+inline constexpr Matrix<num_rows, other_num_columns, T>
 Matrix<num_rows, num_columns, T>::operator*(
     const Matrix<other_num_rows, other_num_columns, T>& other
 ) const noexcept {
@@ -99,28 +99,28 @@ Matrix<num_rows, num_columns, T>::operator*(
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr typename Matrix<num_rows, num_columns, T>::ColumnConstView
+inline constexpr typename Matrix<num_rows, num_columns, T>::ColumnConstView
 Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) const noexcept
 {
     return data_[rowInd];
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr typename Matrix<num_rows, num_columns, T>::ColumnView
+inline constexpr typename Matrix<num_rows, num_columns, T>::ColumnView
 Matrix<num_rows, num_columns, T>::operator[](size_t rowInd) noexcept
 {
     return data_[rowInd];
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) noexcept :
+inline constexpr Matrix<num_rows, num_columns, T>::Matrix(DataStorage data) noexcept :
     data_(std::move(data))
 {
     data_.setInitialized();
 }
 
 template<size_t rows, size_t columns, typename T>
-constexpr std::ostream&
+inline constexpr std::ostream&
 operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept
 {
     if (!matrix.isInitialized()) {
@@ -142,14 +142,14 @@ operator<<(std::ostream& ost, const Matrix<rows, columns, T>& matrix) noexcept
 
 template <size_t num_rows, size_t num_columns, typename T>
 requires (num_rows == num_columns)
-constexpr impl::Inversed<num_rows, num_columns, T>
+inline constexpr impl::Inversed<num_rows, num_columns, T>
 inverse(const Matrix<num_rows, num_columns, T>& m) noexcept
 {
     return impl::Inversed(m);
 }
 
 template <size_t num_rows, size_t num_columns, typename T>
-constexpr Matrix<num_columns, num_rows, T>
+inline constexpr Matrix<num_columns, num_rows, T>
 transpose(const Matrix<num_rows, num_columns, T>& m) noexcept
 {
     if (!m.isInitialized()) {

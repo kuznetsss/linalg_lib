@@ -17,7 +17,7 @@ public:
 
     constexpr explicit ColumnViewImpl(TPtr it) noexcept : begin_(it) {}
 
-    constexpr value_type& operator[](const size_t ind) const noexcept
+    inline constexpr value_type& operator[](const size_t ind) const noexcept
     {
         assert(ind < size);
         return *std::next(begin_, ind);
@@ -39,7 +39,7 @@ public:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     constexpr Data() noexcept = default;
 
-    static constexpr Data ones() noexcept {
+    inline static constexpr Data ones() noexcept {
         Data d;
         for (size_t i = 0; i < elementsNumber; ++i) {
             const auto rowIndex = linearIndexToRowIndex(i);
@@ -49,7 +49,7 @@ public:
         return d;
     }
 
-    constexpr Data& append(const T t) noexcept
+    inline constexpr Data& append(const T t) noexcept
     {
         if (isInitialized()) {
             return *this;
@@ -60,14 +60,14 @@ public:
         return *this;
     }
 
-    constexpr bool isInitialized() const noexcept
+    inline constexpr bool isInitialized() const noexcept
     {
         return initialized_ == elementsNumber;
     }
 
-    constexpr void setInitialized() noexcept { initialized_ = elementsNumber; }
+    inline constexpr void setInitialized() noexcept { initialized_ = elementsNumber; }
 
-    constexpr ColumnConstView operator[](const size_t rowIndex) const noexcept
+    inline constexpr ColumnConstView operator[](const size_t rowIndex) const noexcept
     {
         assert(isInitialized());
         assert(rowIndex < num_rows);
@@ -76,7 +76,7 @@ public:
         };
     }
 
-    constexpr ColumnView operator[](const size_t rowIndex) noexcept
+    inline constexpr ColumnView operator[](const size_t rowIndex) noexcept
     {
         assert(rowIndex < num_rows);
         return ColumnView{
@@ -84,7 +84,7 @@ public:
         };
     }
 
-    constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept
+    inline constexpr void swapRows(const size_t lhs, const size_t rhs) noexcept
     {
         assert(isInitialized());
         assert(lhs < num_columns);
@@ -98,17 +98,17 @@ private:
     Container data_;
     size_t initialized_ = 0;
 
-    static constexpr size_t rowIndexToLinearIndex(const size_t rowIndex) noexcept
+    inline static constexpr size_t rowIndexToLinearIndex(const size_t rowIndex) noexcept
     {
         return rowIndex * num_columns;
     }
 
-    static constexpr size_t linearIndexToRowIndex(const size_t index) noexcept
+    inline static constexpr size_t linearIndexToRowIndex(const size_t index) noexcept
     {
         return index / num_columns;
     }
 
-    static constexpr size_t linearIndexToColumnIndex(const size_t index) noexcept
+    inline static constexpr size_t linearIndexToColumnIndex(const size_t index) noexcept
     {
         return index % num_columns;
     }
